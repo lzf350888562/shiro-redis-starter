@@ -1,0 +1,16 @@
+{
+  "id": "db688283-e5dd-4516-9b3a-d5881c5d78e8",
+  "startTimestamp": 1653204013830,
+  "stopTimestamp": null,
+  "lastAccessTime": 1653204013830,
+  "timeout": 21600000,
+  "expired": false,
+  "host": "127.0.0.1",
+  "attributes": {
+    "a": "b"
+  },
+  "valid": true,
+  "attributeKeys": [
+    "a"
+  ]
+}
