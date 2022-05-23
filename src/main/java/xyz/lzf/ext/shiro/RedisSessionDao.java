@@ -42,12 +42,11 @@ public class RedisSessionDao extends AbstractSessionDAO {
             return;
         }
         try {
-            session.setAttribute("a","b");
             String sessionJson = objectMapper.writeValueAsString(session);
             String redisKey = getRedisKey(String.valueOf(session.getId()));
             redisTemplate.opsForValue().set(redisKey, sessionJson);
-            session.setTimeout(expired * 1000L);
-            redisTemplate.expire(redisKey, expired, TimeUnit.SECONDS);
+//            session.setTimeout(expired * 1000L); 利用redis缓存失效作为session过期
+            redisTemplate.expire(redisKey, expired, TimeUnit.MINUTES);
         } catch (JsonProcessingException e) {
             logger.error("cannot write session json value ", e);
             return;
@@ -122,8 +121,10 @@ public class RedisSessionDao extends AbstractSessionDAO {
                     }else if(field.getType() == long.class){
                         field.setLong(session, jsonNode.get(fieldName).asLong(0L));
                     }else if(field.getType() == Date.class){
-                        if(!"null".equals(jsonNode.get(fieldName))){
+                        if(jsonNode.hasNonNull(fieldName)){
                             field.set(session, new Date(jsonNode.get(fieldName).asLong(0L)));
+                        }else{  // 重要, 否则被判断为过期shiro将进行删除
+                            field.set(session, null);
                         }
                     }else if(field.getType() == boolean.class){
                         field.set(session, Boolean.valueOf(jsonNode.get(fieldName).asText("true")));
