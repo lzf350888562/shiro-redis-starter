@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * Shiro CacheManager. cache the data, such as realm,principal
- * @author lzf
+ *
  */
 public class RedisCacheManager implements CacheManager {
     private static final Logger logger = LoggerFactory.getLogger(RedisCacheManager.class);
