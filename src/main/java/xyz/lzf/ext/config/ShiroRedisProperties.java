@@ -2,6 +2,10 @@ package xyz.lzf.ext.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/**
+ * properties class
+ * @author lzf
+ */
 @ConfigurationProperties("shiro.redis")
 public class ShiroRedisProperties {
     private int sessionExpired = 30;

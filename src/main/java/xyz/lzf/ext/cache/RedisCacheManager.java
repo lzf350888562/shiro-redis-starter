@@ -3,8 +3,10 @@ package xyz.lzf.ext.cache;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.session.mgt.SimpleSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,16 +14,16 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * Shiro CacheManager. cache the data, such as realm,principal
+ * @author lzf
  */
 public class RedisCacheManager implements CacheManager {
     private static final Logger logger = LoggerFactory.getLogger(RedisCacheManager.class);
 
     private final ConcurrentMap<String, Cache> caches = new ConcurrentHashMap<String, Cache>();
-    private StringRedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
     private String keyPrefix;
 
-    public RedisCacheManager(StringRedisTemplate redisTemplate, String keyPrefix) {
-        this.redisTemplate = redisTemplate;
+    public RedisCacheManager(String keyPrefix) {
         this.keyPrefix = keyPrefix;
     }
 
@@ -36,11 +38,11 @@ public class RedisCacheManager implements CacheManager {
         return c;
     }
 
-    public StringRedisTemplate getRedisTemplate() {
+    public RedisTemplate<String, Object> getRedisTemplate() {
         return redisTemplate;
     }
 
-    public void setRedisTemplate(StringRedisTemplate redisTemplate) {
+    public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 }

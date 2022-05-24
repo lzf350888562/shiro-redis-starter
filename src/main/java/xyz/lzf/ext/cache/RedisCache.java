@@ -1,11 +1,9 @@
 package xyz.lzf.ext.cache;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.*;
 
@@ -16,24 +14,21 @@ import java.util.*;
 public class RedisCache<K,V> implements Cache<K,V> {
     private Logger logger = LoggerFactory.getLogger(RedisCache.class);
 
-    private StringRedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
     // 统一前缀, 方便管理, 并可使泛型字符串化
     private String keyPrefix = "shiro_redis_cache:";
-    private ObjectMapper objectMapper;
 
-    public RedisCache(StringRedisTemplate redisTemplate) {
+    public RedisCache(RedisTemplate<String, Object> redisTemplate) {
         if (redisTemplate == null) {
             throw new IllegalArgumentException("RedisTemplate argument cannot be null.");
         }
-        objectMapper = new ObjectMapper();
         this.redisTemplate = redisTemplate;
     }
     // overloading...
-    public RedisCache(StringRedisTemplate redisTemplate, String keyPrefix) {
+    public RedisCache(RedisTemplate<String, Object> redisTemplate, String keyPrefix) {
         if (redisTemplate == null) {
             throw new IllegalArgumentException("RedisTemplate argument cannot be null.");
         }
-        objectMapper = new ObjectMapper();
         this.redisTemplate = redisTemplate;
         this.keyPrefix = keyPrefix;
     }
@@ -53,8 +48,8 @@ public class RedisCache<K,V> implements Cache<K,V> {
             if (key == null) {
                 return null;
             }else{
-                String jsonValue = redisTemplate.opsForValue().get(getRedisKey((String)key));
-                return objectMapper.readValue(jsonValue, new TypeReference<V>() {});
+                return (V)redisTemplate.opsForValue().get(getRedisKey((String) key));
+
             }
         } catch (Throwable t) {
             throw new CacheException(t);
@@ -65,8 +60,7 @@ public class RedisCache<K,V> implements Cache<K,V> {
     public V put(K key, V value) throws CacheException {
         logger.debug("向RedisCache缓存数据 key: [" + key + "]");
         try {
-            String jsonValue = objectMapper.writeValueAsString(value);
-            redisTemplate.opsForValue().set(getRedisKey((String)key), jsonValue);
+            redisTemplate.opsForValue().set(getRedisKey((String)key), value);
             return value;
         } catch (Throwable t) {
             throw new CacheException(t);
@@ -130,12 +124,12 @@ public class RedisCache<K,V> implements Cache<K,V> {
         logger.debug("从RedisCache中获取所有value");
         try {
             Set<String> keys = redisTemplate.keys(getRedisKey("*"));
-            List<String> values = redisTemplate.opsForValue().multiGet(keys);
+            List<Object> values = redisTemplate.opsForValue().multiGet(keys);
             if(values.size() == 0){
                 return Collections.emptyList();
             }
             List<V> newValues = new ArrayList<>(values.size());
-            for (String value : values) {
+            for (Object value : values) {
                 newValues.add((V)value);
             }
             return newValues;
