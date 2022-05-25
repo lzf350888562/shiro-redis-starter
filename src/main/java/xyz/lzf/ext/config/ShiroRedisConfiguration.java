@@ -25,7 +25,8 @@ public class ShiroRedisConfiguration {
     public RedisTemplate<String, Object> shiroRedisTemplate(RedisConnectionFactory redisConnectionFactory){
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
-        template.setKeySerializer(new StringRedisSerializer());
+//        template.setKeySerializer(new StringRedisSerializer());
+        template.setKeySerializer(new RedisObjectSerializer());
         template.setValueSerializer(new RedisObjectSerializer());
         return template;
     }

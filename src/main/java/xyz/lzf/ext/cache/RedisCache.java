@@ -48,7 +48,7 @@ public class RedisCache<K,V> implements Cache<K,V> {
             if (key == null) {
                 return null;
             }else{
-                // 注意: 这里获取字符串key不能强转, 因为shiro将认证或授权信息对象作为key
+                // 注意: 这里获取字符串key不能强转, 因为shiro将对象作为key
                 return (V)redisTemplate.opsForValue().get(getRedisKey(key.toString()));
 
             }

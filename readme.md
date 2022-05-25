@@ -30,7 +30,7 @@ shiro并没有直接使用servlet中的session, 而是自己定义Session接口,
 
 但这对该类对象通过jdk原生序列化是能序列化这些属性的, 原因在这些属性上面有进行说明, 主要是通过writeObject和readObject方法完成序列化, 这也是为什么shiro-redis源码中使用的JDK原生序列化的原因.
 
-> 另外, shiro-redis为了避免频繁读取redis中的session进行反序列化, 在RedisSessionDAO中使用SessionInMemory类实现了在一秒内的请求从本地内存获取请求对象, 避免频繁读取redis;
+> 另外, shiro-redis为了避免频繁读取redis中的session进行反序列化, 在RedisSessionDAO中使用SessionInMemory类实现连续多次读从ThreadLocal中访问.
 > 
 > 我们可能还需要考虑shiro对session的频繁更新, 最频繁变化的内容为lastAccessTime属性, 一旦session中有属性变化, 都会触发写redis更新session, 解决方案可参考https://blog.csdn.net/xhf852963/article/details/117710716
 

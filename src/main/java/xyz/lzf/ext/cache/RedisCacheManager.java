@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * Shiro CacheManager. cache the data, such as realm,principal
+ * Shiro CacheManager. cache the data, such as principal
  *
  */
 public class RedisCacheManager implements CacheManager {
