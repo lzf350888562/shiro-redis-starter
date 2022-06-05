@@ -9,6 +9,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import xyz.lzf.ext.cache.RedisCacheManager;
 import xyz.lzf.ext.serializer.RedisObjectSerializer;
 import xyz.lzf.ext.shiro.RedisSessionDao;
+import xyz.lzf.ext.shiro.ShiroSessionFactory;
 
 /**
  * configuration class
@@ -45,5 +46,11 @@ public class ShiroRedisConfiguration {
         RedisSessionDao redisSessionDao = new RedisSessionDao(properties.getSessionKeyPrefix(), properties.getSessionExpired());
         redisSessionDao.setRedisTemplate(shiroRedisTemplate);
         return redisSessionDao;
+    }
+
+    @Bean
+    public ShiroSessionFactory sessionFactory(){
+        ShiroSessionFactory sessionFactory = new ShiroSessionFactory();
+        return sessionFactory;
     }
 }

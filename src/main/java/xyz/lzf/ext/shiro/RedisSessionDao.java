@@ -34,6 +34,13 @@ public class RedisSessionDao extends AbstractSessionDAO {
             logger.error("session or session id is null");
             return;
         }
+        if (session instanceof ShiroSession) {
+            ShiroSession ss = (ShiroSession) session;
+            if (!ss.isChanged()) {
+                return;
+            }
+            ss.setChanged(false);
+        }
         // 如果session已经无效(过期), 也可以不用更新
 
         String redisKey = getRedisKey(String.valueOf(session.getId()));
