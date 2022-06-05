@@ -34,6 +34,8 @@ public class RedisSessionDao extends AbstractSessionDAO {
             logger.error("session or session id is null");
             return;
         }
+        // 如果session已经无效(过期), 也可以不用更新
+
         String redisKey = getRedisKey(String.valueOf(session.getId()));
         redisTemplate.opsForValue().set(redisKey, session);
 //            session.setTimeout(expired * 1000L); 利用redis缓存失效作为session过期
@@ -75,7 +77,6 @@ public class RedisSessionDao extends AbstractSessionDAO {
             logger.error("session id is null");
             return null;
         }
-        Session session = null;
         return (Session)redisTemplate.opsForValue().get(getRedisKey((String) sessionId));
     }
 
