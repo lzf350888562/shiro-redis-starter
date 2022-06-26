@@ -56,6 +56,8 @@ java.util.LinkedHashMap cannot be cast to org.apache.shiro.subject.PrincipalColl
 
 见到了棺材, 接下来还是考虑其他方案吧...
 
-老老实实改成了字节流序列化方式....在启动类或配置类上加入@Import(ShiroRedisConfiguration.class)即可s使用里面注入的RedisCacheManager和RedisSessionDao了.
+老老实实改成了字节流序列化方式....
+
+~~在启动类或配置类上加入@Import(ShiroRedisConfiguration.class)即可s使用里面注入的RedisCacheManager和RedisSessionDao了.~~
 
 现在只是初步实现, 待优化 >...<
